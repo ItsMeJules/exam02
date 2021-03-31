@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 typedef struct	s_flags {
-	int 	i;
+	int		i;
 	int		printed;
 	int		width;
 	int		precision;
@@ -21,7 +21,6 @@ void	init_flags(t_flags *flags)
 
 void	reset_flags(t_flags *flags)
 {
-	flags->printed = 0;
 	flags->width = 0;
 	flags->precision = 0;
 	flags->zeros = 0;
@@ -34,7 +33,7 @@ void	ft_putchar(char c)
 
 void	print_till(t_flags *flags, const char *format, char c)
 {
-	while (format[flags->i] && format[flags->i] != c)	
+	while (format[flags->i] && format[flags->i] != c)
 	{
 		ft_putchar(format[flags->i]);
 		flags->i++;
@@ -50,7 +49,7 @@ int		is_num(char c)
 void	handle_flags(t_flags *flags, const char *format)
 {
 	flags->i++;
-	if (is_num(format[flags->i]))	
+	if (is_num(format[flags->i]))
 	{
 		while (is_num(format[flags->i]))
 		{
@@ -92,14 +91,14 @@ void	print_chars(int len, char c, t_flags *flags)
 	}
 }
 
-int		len_nbr_base(long nbr, int base)
+int		len_nbr_base(long nbr, int base_len)
 {
-	int	len;
-	
+	int len;
+
 	len = 1;
-	while (nbr >= base)	
+	while (nbr >= base_len)
 	{
-		nbr /= base;
+		nbr /= base_len;
 		len++;
 	}
 	return (len);
@@ -119,7 +118,7 @@ void	putnbr_base(long nbr, char *base, int base_len)
 void	print_s(t_flags *flags, const char *format)
 {
 	char	*s;
-	int		len;	
+	int		len;
 
 	flags->i++;
 	s = va_arg(flags->args, char *);
@@ -146,7 +145,7 @@ void	print_d(t_flags *flags, const char *format)
 	{
 		neg = 1;
 		nbr = -nbr;
-	}	
+	}
 	len = len_nbr_base(nbr, 10);
 	if (nbr == 0 && flags->precision)
 		len = 0;
@@ -180,13 +179,13 @@ void	print_x(t_flags *flags, const char *format)
 	print_chars(flags->zeros, '0', flags);
 	if (flags->precision && nbr == 0)
 		return ;
-	putnbr_base(nbr, "0123456789abcdef", 16);
+	putnbr_base(nbr, "0123456789abcedf", 16);
 	flags->printed += len;
 }
 
 int		ft_printf(const char *format, ...)
 {
-	t_flags	flags;
+	t_flags flags;
 
 	init_flags(&flags);
 	va_start(flags.args, format);
@@ -199,9 +198,9 @@ int		ft_printf(const char *format, ...)
 			handle_flags(&flags, format);
 			if (format[flags.i] == 's')
 				print_s(&flags, format);
-			else if (format[flags.i] == 'd')
+			if (format[flags.i] == 'd')
 				print_d(&flags, format);
-			else if (format[flags.i] == 'x')
+			if (format[flags.i] == 'x')
 				print_x(&flags, format);
 		}
 	}
@@ -210,7 +209,7 @@ int		ft_printf(const char *format, ...)
 
 int main()
 {
-	ft_printf("%d %x %s %.8d\n", 105, 44, "bonjour !", 8935);
+	ft_printf("%d %x %s %6.8d\n", 105, 44, "bonjour !", 8935);
 	printf("%d %x %s %6.8d", 105, 44, "bonjour !", 8935);
 	return (0);
 }
